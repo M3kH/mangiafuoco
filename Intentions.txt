@@ -1,0 +1,187 @@
+UI Diamond - The age of the structured apps
+
+A simple work around in what the functionality should be.
+
+- Init
+  This function you can pass a configuration to initialize models, collection, views, and components.
+  All the above functionality are for support this initial method.
+
+- LoadCollection ( 'name', <ext_opt>, data )
+
+- LoadComponent ( 'name', <ext_opt>, data )
+
+- LoadModel ( 'name', <ext_opt>, data )
+
+- LoadTemplate ( 'name' )
+
+- LoadView ( 'name', 'el', model, collection, data )
+
+Try to scope all the cases for init method:
+
+// Get Collection BackBone:
+{
+    type: 'collection',
+
+    name: false,          // - <string> and < this.data | Array> set initialize under that id
+
+    id: false,            // - <string> and < this.data | Array> set initialize under that id
+
+    global: true,         // - <false> make sure other
+
+    extend: false,        // - <Obj> make sure extend the collection with that obj before initialize
+
+    data: false,          // - <Array> if this is set then get initialized
+
+    withModel: 'name' || {
+        name: '',
+        extend: {}
+    }
+
+    init: false           // - Default: this should be defined in the configuration of the app
+                          // - false return the raw collection that needs to be initialized
+                          // - 'fetch' once the collection is initialized it would call fetch
+                          // - if is true, it would look for params.data or for paramas.url && fetch
+}
+
+// Cases for get Collection
+
+// 1) Set a Global Collection with simply data
+{
+    type: 'collection',
+    name: 'SampleList/DoneCollection',
+    data: [ {}, {}, ... ]
+}
+in function: loadCollection('SampleList/DoneCollection', []);
+
+// 2) Get a Global Collection
+{
+    type: 'collection',
+    name: 'SampleList/DoneCollection'
+}
+in function: loadCollection('SampleList/DoneCollection');
+
+
+// 3) Extend Set and Get a Global collection
+{
+    type: 'collection',
+    name: 'SampleList/DoneCollection'
+    extend: {
+        url : 'http://www.github.com/some.json'
+    },
+    init/data: [ {}, {}, ... ]
+}
+in function: loadCollection('SampleList/DoneCollection', { url: 'http://www.github.com/some.json'}, []);
+
+// 3) Set and Get a Global collection which is fetched from a certain url
+{
+    type: 'collection',
+    name: 'SampleList/DoneCollection',
+    extend: {
+        url : 'http://www.github.com/some.json'
+    },
+    init: 'fetch'
+}
+in function: loadCollection('SampleList/DoneCollection', { url: 'http://www.github.com/some.json' }, 'fetch');
+
+// 4) Describe the case when we want to initialize the same collection, with the different data. And how to solve.
+
+// For instance we can have the same Collection 'Users' which has some common function like: getActiveUsers()
+// We want that functions in two places but we don't want to duplicate this code.
+// So for instance the collection 'Users' can be used inside the a table for doing some operation for them
+// and another into the Private messages.
+{
+    type: 'collection',
+    name: 'Users'
+    id: 'UsersGrid',
+    init/data: [ {}, {}, ... ]
+},
+in function: loadCollection('Users', { url: 'http://www.github.com/some.json' }, 'fetch', 'UsersGrid');
+
+{
+    type: 'collection',
+    name: 'Users'
+    id: 'UsersMessages',
+    init/data: [ {}, {}, ... ]
+}
+in function: loadCollection('Users', { url: 'http://www.github.com/some.json' }, 'fetch', 'UsersMessages');
+
+// 5) Describe the case when we want to initialize the same collection with linked and unlinked data. And how to solve.
+
+Note the example on top, is total valid for Models and Views as well
+
+Views:
+1) Show how to use a view and connect to her some custom models.
+{
+    type: 'view',
+
+    el: '#app div.user-list',
+
+    name: 'Messages/UsersDropDown',
+
+    data: 'fetch!model:Users',
+
+    data: 'url!http://www.ideabile.com/some.json',
+
+    data: 'collection#UsersGrid!fetch',
+    data: 'collection#UsersGrid!url:http://www.ideabile.com/some.json',
+
+    data_loader: {
+        user: "model#User"
+        users: "collection#UserGrid"
+
+        // Note this work has default loader
+        filters: {
+            type: "collection",
+            name: "Filters",
+            data: []
+        }
+    },
+
+    extend: {
+        collection_id: 'UsersMessages', // This is optional refer to the id instance
+        collection: 'Users', // This would pick up from default the first instance or would create a new one.
+    }
+}
+in function: loadView('Message/UsersDropDown', '#app div.user-list',
+
+2) How looks like a view needs to instanciate a model/collection trough a url.
+
+3) How looks a view wants a model/collection trough id instance
+4) How looks a view wants
+
+Components:
+components should be structured better,
+- Should return only the main view, without initialization.
+- Unique way to pass configs
+- Unique way to pass the data
+- Unified error handling. Maybe into a default component. (ideas, alerts control, popup, notify)
+
+1) Reduce boilerplate code.
+"use strict";
+return function( app, elem, config, data){
+
+    var self = this,
+        id = _.uniqueId("advanced_filters_marionette_"),
+        conf = {},
+        labels = {
+            'button_add_row': 'Add Row'
+        };
+
+    labels = _.extend(labels, data.labels);
+
+    conf[id] = elem;
+    app.marionette.addRegions(conf);
+
+    return app.marionette[id].show(new OverallView({
+        url: "",
+        labels: data.labels,
+        filters: data.filters,
+        available_filters: data.available_filters
+    }));
+
+    to => module.exports = require("./views/MainView.js");
+
+ Then before load
+ labels would be passed under the variable _l, _label, the data under the variable _d, _data; _c, _config.
+
+ Make sure the templates use handlebars, and make sure all the view get in the template the label obj with i18n plugin.

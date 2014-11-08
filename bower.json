@@ -1,0 +1,31 @@
+{
+
+    "name": "mangiafuoco",
+    "version": "0.1.1a",
+    "homepage": "https://github.com/M3kH/mangiafuoco",
+    "authors": [
+        "Mauro Mandracchia <info@ideabile.com>"
+    ],
+    "description": "'Mangiafuoco is the fictional director and puppet master of the Great <b>Marionette</b> Theatre' ~ http://en.wikipedia.org/wiki/Mangiafuoco",
+    "license": "MIT",
+    "main": "index.js",
+    "keywords": [
+        "requirejs",
+        "webcomp",
+        "backbone",
+        "marionette"
+    ],
+    "private": false,
+    "ignore": [
+        "**/.*",
+        "node_modules"
+    ],
+    "dependencies": {
+        "jquery": "*",
+        "requirejs": ">=2",
+        "almond": ">=0.2",
+        "backbone": ">=1.1.2",
+        "underscore": ">=1.6.0",
+        "marionette": ">=2.0.3"
+    }
+}
