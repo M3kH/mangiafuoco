@@ -3,6 +3,8 @@ MangiaFuoco
 Is the fictional director and puppet master of the Great '[Marionette](http://www.marionettejs.com)' Theatre.
 Basically a App manager with a loader for: views, model and collection;
 
+**PROTOTYPE - NOT USE IN PRODUCTION**
+
 ## Install & Use it
 ```
 bower install git@github.com:M3kH/mangiafuoco.git
