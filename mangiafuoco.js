@@ -74,7 +74,7 @@
 
         initialize: function (config) {
             if (config) {
-                self.config = _.extend(self.config, config);
+                this.config = _.extend(this.config, config);
             }
         },
 
@@ -135,10 +135,23 @@
         _allowedType: ['collection', 'model', 'view', 'components'],
 
         _parseHtml: function () {
-            return MF.$('.js-mf').each(function (i, $elem) {
-                var opt = $elem.data();
-                this._load(opt);
+            var self = this;
+            return $('.js-mf').each(function (i, $elem) {
+                var opt = $($elem).data();
+                opt.el = $elem;
+                self._parse(opt);
             });
+        },
+
+        _setType: function( opt ){
+            _.forEach(this._allowedType, function(type){
+                var name = opt[type];
+               if( _.isString(name) ){
+                   opt.type = type;
+                   opt.name = name;
+               }
+            });
+            return opt;
         },
 
         _load: function (opt, done) {
@@ -149,15 +162,26 @@
             opt = _.extend({
                 id: false,
                 el: false,
-                withModel: false,
-                withCollection: false,
                 name: false,
                 type: false,
                 data: false,
                 global: false,
                 extend: false,
-                init: false
+                init: false,
+
+                //Data reserved this are substitude of type and name
+                collection: false,
+                component: false,
+                model: false,
+                view: false
+
+                // Not current supported but looking forward
+                // I would like to have withChildView, withTemplate and:
+                // withModel: false,
+                // withCollection: false,
             }, opt);
+
+            if(opt.type) { opt = self._setType(opt); };
 
             if (!self._validateRequest(opt)) {
                 return false;
@@ -401,7 +425,7 @@
             root.MF = previousMF;
             return this;
         },
-        VERSION: '0.2.0'
+        VERSION: '0.2.1'
     });
     return MF;
 
