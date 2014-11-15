@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Jasmine Spec Runner v2.0.3</title>
+
+    <link rel="shortcut icon" type="image/png" href="../bower_components/jasmine/lib/jasmine-core/jasmine_favicon.png">
+    <link rel="stylesheet" type="text/css" href="../bower_components/jasmine/lib/jasmine-core/jasmine.css">
+
+    <script type="text/javascript" src="../bower_components/jasmine/lib/jasmine-core/jasmine.js"></script>
+    <script type="text/javascript" src="../bower_components/jasmine/lib/jasmine-core/jasmine-html.js"></script>
+    <script type="text/javascript" src="../bower_components/jasmine/lib/jasmine-core/boot.js"></script>
+    <script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="../bower_components/jasmine-jquery/lib/jasmine-jquery.js"></script>
+
+    <!-- include source files here... -->
+    <script src="../bower_components/requirejs/require.js"></script>
+
+    <!-- include spec files here... -->
+    <script type="text/javascript">
+        // list spec files here
+        require({
+            urlArgs: "bust=" +  (new Date()).getTime(), // This is for don't cache files during the requireJS structure.
+            paths: {
+                // Third Parties Dependencies
+                "jquery": "../bower_components/jquery/dist/jquery.min",
+                "underscore": "../bower_components/underscore/underscore",
+                "backbone": "../bower_components/backbone/backbone",
+                "marionette": "../bower_components/marionette/lib/backbone.marionette",
+                "mf": "../mangiafuoco",
+
+                "text": "../bower_components/requirejs-plugins/lib/text",
+                "tpl": "../bower_components/requirejs-tpl-jfparadis/tpl"
+
+            }
+        },[
+            "index"
+        ], function (mf) {
+            window.onload();
+        });
+
+
+        define('app', ['mf'], function(mf){
+            return window.app = window.app ? window.app : new MF({
+                paths:{
+                    main: 'sample-project/js/'
+                }
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+</body>
+</html>

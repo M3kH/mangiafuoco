@@ -1,29 +1,36 @@
 {
-    "name": "mangiafuoco",
-    "version": "0.2.1",
-    "homepage": "https://github.com/M3kH/mangiafuoco",
-    "authors": [
-        "Mauro Mandracchia <info@ideabile.com>"
-    ],
-    "description": "'Mangiafuoco is the fictional director and puppet master of the Great <b>Marionette</b> Theatre' ~ http://en.wikipedia.org/wiki/Mangiafuoco",
-    "license": "MIT",
-    "main": "index.js",
-    "keywords": [
-        "requirejs",
-        "webcomp",
-        "backbone",
-        "marionette"
-    ],
-    "private": false,
-    "ignore": [
-        "**/.*",
-        "node_modules"
-    ],
-    "dependencies": {
-        "jquery": "*",
-        "requirejs": ">=2",
-        "backbone": ">=1.1.2",
-        "underscore": ">=1.6.0",
-        "marionette": ">=2.0.3"
-    }
+  "name": "mangiafuoco",
+  "version": "0.2.2",
+  "homepage": "https://github.com/M3kH/mangiafuoco",
+  "authors": [
+    "Mauro Mandracchia <info@ideabile.com>"
+  ],
+  "description": "'Mangiafuoco is the fictional director and puppet master of the Great <b>Marionette</b> Theatre' ~ http://en.wikipedia.org/wiki/Mangiafuoco",
+  "license": "MIT",
+  "main": "index.js",
+  "keywords": [
+    "requirejs",
+    "webcomp",
+    "backbone",
+    "marionette"
+  ],
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "node_modules"
+  ],
+  "devDependencies": {
+    "jasmine": "~2.0.4",
+    "sinon": "~1.11.1",
+    "requirejs-tpl-jfparadis": "*",
+    "requirejs-plugins": "~1.0.2",
+    "jasmine-jquery": "~2.0.5"
+  },
+  "dependencies": {
+    "jquery": "*",
+    "requirejs": ">=2",
+    "backbone": ">=1.1.2",
+    "underscore": ">=1.6.0",
+    "marionette": ">=2.0.3"
+  }
 }

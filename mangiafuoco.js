@@ -56,13 +56,14 @@
             paths: {
                 extend: false,
                 main: 'libs/',
-                collection: 'libs/collection/',
-                templates: 'libs/templates/',
-                view: 'libs/views/',
+                collection: 'collections/',
                 component: 'components/',
+                model: 'models/',
+                templates: 'templates/',
+                view: 'views/',
                 i18n: 'i18n/',
                 lang: 'en-en',
-                dtmz: 'gt+1'
+                dtmz: 'GTM+1'
             },
             html: false
         },
@@ -74,7 +75,7 @@
 
         initialize: function (config) {
             if (config) {
-                this.config = _.extend(this.config, config);
+                this.config = jQuery.extend(true, this.config, config);
             }
         },
 
@@ -235,7 +236,7 @@
             var self = this,
                 type = opt.type,
                 name = opt.name,
-                path = this.config.paths[type] + name,
+                path = this.config.paths.main + this.config.paths[type] + name,
                 extendPath = this.config.paths.extend ? this.config.paths.extend + path : false,
                 callback = function (obj) {
                     if(_.isFunction(obj)){
@@ -252,7 +253,7 @@
 
 
             if (type === 'component') {
-                path = path + '/' + name;
+                path = path + '/index.js';
                 if (extendPath) {
                     extendPath = extendPath + '/index.js';
                 }
@@ -425,7 +426,7 @@
             root.MF = previousMF;
             return this;
         },
-        VERSION: '0.2.1'
+        VERSION: '0.2.2'
     });
     return MF;
 

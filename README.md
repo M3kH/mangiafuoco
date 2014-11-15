@@ -3,16 +3,90 @@ MangiaFuoco
 Is the fictional director and puppet master of the Great '[Marionette](http://www.marionettejs.com)' Theatre.
 Basically a App manager with a loader for: views, model and collection;
 
-**PROTOTYPE - NOT USE IN PRODUCTION**
-
 ## Install & Use it
 ```
 bower install git@github.com:M3kH/mangiafuoco.git
 ```
-## The concept
+## What is Mangiafuoco?
 We are JavaScript Lover, and fan of Backbone world.
-From the beginning of my experience in js frameworks, I notice my self think and rethink almost same problems.
-MangiaFuoco is like an orchestra tool for solve them.
+But from the beginning of our experience in js frameworks, we notice some repetitive task/code which can be easy avoid in a declarative way.
+
+**MangiaFuoco** is like an orchestra tool for solve them, simply provide a *loader* ~  based on top of **RequireJS**, he can *extend* objects, and can even *initialize* them.
+
+*MF* define for you a default **non~opinionated** directory structure, which is possible to customize:
+
+```
+ -- app/
+ -------- js/
+ ----------- collections/
+ ----------- components/
+ ----------- models/
+ ----------- views/
+```
+
+Another concept introduce in *MF*, are [Web Components](http://webcomponents.org/).
+
+With *Web Components*, we think them can be wrote has the developer prefer, but because, we don't believe in full functional components which can be contain duplication of code, we think them into our FrameWork contest.
+
+But how the component structure looks?
+
+```
+ -- ComponentName/
+ -------- collections/
+ -------- models/
+ -------- views/
+ -------- index.js // this contain the instructions for route to the constructor usually a view.
+```
+
+That's why is good idea for default export the MF initizialization under the **app** global variable.
+
+
+## Ok cool, but how I can use it?
+First important thing, is *MF* dependencies.
+
+- [RequireJS](http://www.requirejs.org)
+- [BackBone](http://www.backbonejs.org)
+- [Marionette](http://www.marionettejs.org)
+
+Then you have to define your `app` name space into your `RequireJS` configuration which can look like:
+
+```javascript
+        define('app', ['mf'], function(mf){
+            return window.app = window.app ? window.app : new MF({
+                paths:{
+                    main: 'sample-project/js/'
+                }
+            });
+        });
+```
+
+Start to load your models, collections, components and views:
+
+### Load Model / Collection
+```javascript
+// This would look into models/ModelName.js but it would be return without be initialize
+app.load({model: 'ModelName'}); 
+// Collection
+app.load({collection: 'CollectionName'});
+
+// This return an instance of.
+app.load({model: 'ModelName', data: {name: 'Hello World!'}});
+
+// Equivalent with type:
+app.load({type:'model', name: 'ModelName', data: {name: 'Hello World!'}});
+
+// Extend before return
+app.load({collection: 'CollectionName', extend: { hasValue: function(){ return this.value ? true : false}}});
+```
+
+### Load a View / Component
+```javascript
+app.load({view: 'ViewName', el: '#someSelector'}); 
+
+app.load({component: 'ComponentName', el: '#someSelector', data: {name: 'Hello World!'}});
+```
+
+## What can I do with it?
 
 - **Multipage logic integration**
 
