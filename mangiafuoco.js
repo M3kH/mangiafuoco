@@ -100,7 +100,7 @@
         },
 
         _parse: function (options, done) {
-            var self = this,
+            var self = this;
                 result = [],
                 def = new $.Deferred(),
                 _done = function (index) {
@@ -116,24 +116,27 @@
                 };
 
             if (!_.isArray(options) && _.isObject(options)) {
-                self._load(options, function (_result) {
-                    if (done) {
-                        done(_result);
-                    }
-                    return def.resolve(_result);
-                });
+                setTimeout(function(){
+                    self._load(options, function (_result) {
+                        if (done) {
+                            done(_result);
+                        }
+                        return def.resolve(_result);
+                    });
+                }, 3);
             }else{
                 _.each(options, function (option, index) {
-                    self._load(option, _done(index));
+                    setTimeout(function(){
+                        self._load(option, _done(index));
+                    }, 3);
                 });
             }
-
 
             // Ensure a normalized return value (Promise)
             return def.promise();
         },
 
-        _allowedType: ['collection', 'model', 'view', 'components'],
+        _allowedType: ['collection', 'model', 'view', 'component'],
 
         _parseHtml: function () {
             var self = this;
@@ -182,7 +185,7 @@
                 // withCollection: false,
             }, opt);
 
-            if(opt.type) { opt = self._setType(opt); };
+            if(!opt.type) { opt = self._setType(opt); };
 
             if (!self._validateRequest(opt)) {
                 return false;
@@ -236,7 +239,8 @@
             var self = this,
                 type = opt.type,
                 name = opt.name,
-                path = this.config.paths.main + this.config.paths[type] + name,
+                dest = this.config.paths[type] + name,
+                path = (type != 'component') ? this.config.paths.main + dest : dest,
                 extendPath = this.config.paths.extend ? this.config.paths.extend + path : false,
                 callback = function (obj) {
                     if(_.isFunction(obj)){
@@ -253,9 +257,9 @@
 
 
             if (type === 'component') {
-                path = path + '/index.js';
+                path = path + '/index';
                 if (extendPath) {
-                    extendPath = extendPath + '/index.js';
+                    extendPath = extendPath + '/index';
                 }
             }
 
@@ -267,17 +271,11 @@
                 return false;
             }
 
-            switch (loader) {
-                case "amd":
-                    return this._loadAmd(path, extendPath, callback);
-                    break;
-                case "commonjs":
-                    return this._loadCommonjs(path, extendPath, callback);
-                    break;
-            }
+            return this._loadAmd(path, extendPath, callback);
         },
 
         _setInstance: function (opt, obj, _req) {
+            var instance;
 
             if (!this._isInstance(opt.type, opt.id)) {
                 this.instances[opt.type][opt.id] = {opt: opt};
@@ -297,10 +295,19 @@
             switch (_req) {
 
                 case 'view':
-                    if(_.isFunction(obj)) return this.instances[opt.type][opt.id].instance = new obj({el: opt.el, data: opt.data});
-                    if(obj.then) return this.instances[opt.type][opt.id].instance = obj.then(function(_obj){
-                        return new _obj({el: opt.el, data: opt.data});
-                    });
+                    if(_.isFunction(obj)){
+                        this.instances[opt.type][opt.id].instance = instance = new obj({el: opt.el, data: opt.data});
+                        instance.render();
+                    }
+                    if(obj.then){
+                        this.instances[opt.type][opt.id].instance = instance = obj.then(function(_obj){
+                            var _instance = new _obj({el: opt.el, data: opt.data});
+                            _instance.render();
+                            return _instance;
+                        });
+                    }
+
+                    return instance;
 
                 case 'get':
                     return obj;
@@ -337,16 +344,6 @@
                     self.notify({type: 'error', msg: 'File: ' + path + ' not found!', ref: err});
                 });
             });
-        },
-
-        _loadCommonjs: function (path, extended, cb) {
-            var _file = require(path);
-            if (!_file && extended) {
-                _file = require(extended);
-            }
-            _file = _file ? _file : false;
-
-            return cb(_file);
         },
 
         _validateRequest: function (opt) {
@@ -426,7 +423,7 @@
             root.MF = previousMF;
             return this;
         },
-        VERSION: '0.2.2'
+        VERSION: '0.2.3'
     });
     return MF;
 

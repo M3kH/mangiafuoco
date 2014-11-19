@@ -43,8 +43,10 @@
         define('app', ['mf'], function(mf){
             return window.app = window.app ? window.app : new MF({
                 paths:{
-                    main: 'sample-project/js/'
-                }
+                    main: 'sample-project/js/',
+                    component: 'sample-project/js/components/'
+                },
+                html: true
             });
         });
     </script>
