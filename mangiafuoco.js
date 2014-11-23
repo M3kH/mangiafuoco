@@ -99,7 +99,6 @@
                 lang: 'en-en',
                 dtmz: 'GTM+1'
             },
-            globals: ['$', '_', 'Backbone', 'Marionette'],
             mode: 'Backbone',
             html: false
         },
@@ -118,7 +117,8 @@
             onGetPath: false,
             onExtend: false,
             onReturnInstace: false
-        };
+        },
+        default_globals = ['$', '_'],
 
     // Initial Setup
     // -------------
@@ -129,9 +129,15 @@
         this.instances = {};
         this.config = {};
 
-        if ( config ) this.config = _.deepExtend(this.config, default_config, config);
+        if( config.globals){
+            this.config.globals = config.globals
+        }else{
+            this.config.globals = default_globals;
+        }
 
-        if(this.config.globals) global(this.config.globals);
+        if ( config ) this.config = _.deepExtend(this.config, default_config, config);
+        Global(this.config.globals);
+
         if(this.config.mode) loadMode(this.config.mode);
 
 
@@ -202,7 +208,7 @@
 
         // Global
         // Add global variables to MF object
-        global = MF.prototype.global = function( options ){
+        Global = MF.prototype.global = function( options ){
             if( !options ) return false;
 
             if(_.isArray(options)){
