@@ -10,30 +10,28 @@
     // Set up MangiaFuoco appropriately for the environment. Start with AMD.
     if (typeof define === 'function' && define.amd) {
         define([
-            'require', 'underscore', 'jquery', 'backbone', 'marionette', 'exports'
-        ], function (require, _, $, Backbone, Marionette, exports) {
+            'require', 'underscore', 'jquery', 'exports'
+        ], function (require, _, $, exports) {
             // Export global even in AMD case in case this script is loaded with
             // others that may still expect a global Backbone.
-            root.MF = factory(root, exports, _, Backbone, Marionette, require, $, 'amd');
+            root.MF = factory(root, exports, _, $, 'amd', require);
         });
 
         // Next for Node.js or CommonJS. jQuery may not be needed as a module.
     }
     else if (typeof exports !== 'undefined') {
         var _ = require('underscore'),
-            Backbone = require('backbone'),
-            Marionette = require('marionette'),
             $ = require('jquery');
 
-        factory(root, exports, _, Backbone, Marionette, require, $, 'commonjs');
+        factory(root, exports, _, $, 'commonjs', require);
 
         // Finally, as a browser global.
     }
     else {
-        root.MF = factory(root, {}, root._, root.Backbone, root.Marionette, (root.jQuery || root.Zepto || root.ender || root.$));
+        root.MF = factory(root, {}, root._, (root.jQuery || root.Zepto || root.ender || root.$));
     }
 
-}(this, function (root, MF, _, Backbone, Marionette, require, $, loader) {
+}(this, function (root, MF, _, $, loader, require ) {
 
     var __root = this,
         __arguments = arguments;
@@ -118,7 +116,7 @@
             onExtend: false,
             onReturnInstace: false
         },
-        default_globals = ['$', '_'],
+        default_globals = ['$', '_'];
 
     // Initial Setup
     // -------------
@@ -250,10 +248,6 @@
 
                 switch (_req) {
 
-                    case 'view':
-                        instance = new obj({el: opt.el, data: opt.data});
-                        instance.render();
-
                     case 'get':
                         return obj;
 
@@ -290,7 +284,8 @@
                 'view': {
 
                     defaults: {
-                        el: false
+                        el: false,
+                        init: true
                     },
 
                     onExtend: function (opt, obj) {
@@ -371,12 +366,12 @@
 
             if  ( _.isArray(options) ) {
                 return _.each(options, function (option, index) {
-                    option.init = 'extend';
+                    option.init = 'raw';
                     return self._parse(option);
                 });
             }
 
-            options.init = 'extend';
+            options.init = 'raw';
             return self._parse(options, done);
         },
 
@@ -435,14 +430,16 @@
                 req,
                 defaults = {};
 
+            // Set type and validate request
             if(!opt.type) { opt = self._setType(opt); };
             if (!self._validateRequest(opt)) return false;
 
-
-            if(this.config.adapter) defaults = MF.prototype.adapters[ this.config.adapter ]['default'];
-            defaults = _.extend(defaults, default_option);
+            // Extend with Adapter
+            if(MF.prototype.adapters[opt.type] && MF.prototype.adapters[opt.type]['defaults'] ){
+                defaults = MF.prototype.adapters[ opt.type ]['defaults'];
+            }
+            defaults = _.extend({}, default_option, defaults);
             opt = _.extend( defaults, opt );
-
 
             req = self._getTypeRequest(opt);
 
@@ -498,7 +495,6 @@
                 extendPath = this.config.paths.extend ? this.config.paths.extend + path : false;
 
             if(this.adapters[opt.type] && _.isFunction(this.adapters[opt.type]['onGetPath'])){
-                console.log("adapter exist", this.adapters[opt.type]);
                 return this.adapters[opt.type]['onGetPath'].call(this, opt, path, extendPath);
             }
 
@@ -557,8 +553,7 @@
             var instance;
                 obj = this._extendObject(opt, obj);
 
-            if(opt.init === 'extend') return obj;
-
+            if(opt.init === 'raw') return obj;
             instance = this._getInstanceObject(opt, obj, _req);
 
             this._setInstance(opt, instance);
@@ -579,8 +574,8 @@
 
         _getInstanceObject: function(opt, obj, _req){
 
-            if( this.adapters[opt.type] && _.isFunction(this.adapters[opt.type]['onExtend'])){
-                return this.adapters[opt.type]['onExtend'].call(this, opt, obj, _req);
+            if( this.adapters[opt.type] && _.isFunction(this.adapters[opt.type]['onReturnInstance'])){
+                return this.adapters[opt.type]['onReturnInstance'].call(this, opt, obj, _req);
             }
 
             return default_adapter.onReturnInstance.call(this, opt, obj, _req);
@@ -666,7 +661,7 @@
             }
 
             // If is init and data omitted and opt.id and opt.name is a string is a get
-            if (opt.init === 'extend') {
+            if (opt.init === 'raw') {
                 return {type: 'get', init: false};
             }
             if ((!opt.init && !opt.data) && _.isString(opt.id) && _.isString(opt.name)) {

@@ -35,9 +35,8 @@
             },
 
             shim:{
-                app: {
-                    deps:['underscore','jquery', 'backbone', 'marionette'],
-                    exports: 'app'
+                mf: {
+                    deps:['underscore','jquery', 'backbone', 'marionette']
                 }
             }
         },[
@@ -47,18 +46,14 @@
         });
 
 
-        define('app', ['mf', 'jquery', 'backbone', 'marionette'], function($, Backbone, Marionette, mf){
+        define('app', ['mf'], function($, Backbone, Marionette, mf){
 
             return window.app = window.app ? window.app : new MF({
                 paths:{
                     main: 'sample-project/js/',
                     component: 'sample-project/js/components/'
                 },
-                globals: {
-                    $: $,
-                    Backbone: Backbone,
-                    Marionette: Marionette
-                },
+                globals: ['$', 'Backbone', 'Marionette'],
                 html: true
             });
         });
