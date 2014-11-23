@@ -39,6 +39,7 @@
     loader = loader ? loader : false;
 
     // Underscore Deep Extend
+    // https://gist.github.com/kurtmilam/1868955
     function deepExtend (obj) {
       var parentRE = /#{\s*?_\s*?}/,
           slice = Array.prototype.slice,
@@ -154,7 +155,7 @@
         return this;
     };
 
-    MF.prototype.VERSION = '0.2.3';
+    MF.prototype.VERSION = '0.2.4';
     MF.prototype.adapters = {};
 
     MF.prototype.noConflict = function () {
