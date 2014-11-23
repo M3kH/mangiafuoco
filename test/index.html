@@ -32,6 +32,12 @@
                 "text": "../bower_components/requirejs-plugins/lib/text",
                 "tpl": "../bower_components/requirejs-tpl-jfparadis/tpl"
 
+            },
+
+            shim:{
+                mf: {
+                    deps:['underscore','jquery', 'backbone', 'marionette']
+                }
             }
         },[
             "index"
@@ -40,12 +46,14 @@
         });
 
 
-        define('app', ['mf'], function(mf){
+        define('app', ['mf'], function($, Backbone, Marionette, mf){
+
             return window.app = window.app ? window.app : new MF({
                 paths:{
                     main: 'sample-project/js/',
                     component: 'sample-project/js/components/'
                 },
+                globals: ['$', 'Backbone', 'Marionette'],
                 html: true
             });
         });

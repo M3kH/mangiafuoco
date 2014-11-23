@@ -5,9 +5,8 @@ define(['app'], function(app){
 
         beforeEach(function(done) {
             setFixtures('<div id="main-view"/>');
-            app.load({type:'view', name: 'view', el:"#main-view"}).then(function(_r){
+            app.init({type:'view', name: 'view', el:"#main-view"}).then(function(_r){
                 view = _r;
-                view.render();
                 done();
             });
         });
@@ -31,7 +30,7 @@ define(['app'], function(app){
 
         beforeEach(function(done) {
             setFixtures('<div id="main-view"/>');
-            app.load({type:'view', name: 'view',
+            app.init({type:'view', name: 'view',
                 extend: { _text: 'something', _function : function(){}, _obj: {}  },
                 el:"#main-view"}).then(function(_r){
                 view = _r;
