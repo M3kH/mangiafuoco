@@ -6,8 +6,11 @@ define(['app'], function(app){
         beforeEach(function(done) {
             setFixtures('<div id="main-view"/>');
             app.load({type:'view', name: 'view', el:"#main-view"}).then(function(_r){
-                view = _r;
+                view = new _r();
                 view.render();
+                console.log(view);
+                console.log(view.$el);
+                console.log(view.el);
                 done();
             });
         });
