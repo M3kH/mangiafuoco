@@ -39,7 +39,6 @@
     loader = loader ? loader : false;
 
     // Underscore Deep Extend
-    // https://gist.github.com/kurtmilam/1868955
     function deepExtend (obj) {
       var parentRE = /#{\s*?_\s*?}/,
           slice = Array.prototype.slice,
@@ -84,7 +83,7 @@
     // Save the previous value of the `MF` variable, so that it can be
     // restored later on, if `noConflict` is used.
     var previousMF = root.MF,
-        allowed_type = ['collection', 'model', 'view', 'component'],
+        allowed_type = ['collection', 'model'],
         default_config = {
             paths: {
                 extend: false,
@@ -155,7 +154,7 @@
         return this;
     };
 
-    MF.prototype.VERSION = '0.2.4';
+    MF.prototype.VERSION = '0.2.3';
     MF.prototype.adapters = {};
 
     MF.prototype.noConflict = function () {
@@ -176,6 +175,9 @@
             return _.each(option, function(value, key){
                 if(!canHaveProperty(key, nested)) return false;
 
+                if( nested === 'adapters' ){
+                    allowed_type.push(key);
+                }
 
                 if(nested){
                     if(!MF.prototype[nested]) MF.prototype[nested] = {};
@@ -295,8 +297,18 @@
                     },
 
                     onReturnInstance: function (opt, obj, _req) {
-                        var instance = new obj({el: opt.el, data: opt.data});
-                            instance.render();
+                        var instance;
+
+                        if(obj.then){
+                            return obj.then(function(_obj){
+                                instance = new _obj({el: opt.el, data: opt.data});
+                                instance.render();
+                                return instance;
+                            });
+                        }
+
+                        instance = new obj({el: opt.el, data: opt.data});
+                        instance.render();
                         return instance;
                     }
                 },
@@ -327,7 +339,10 @@
             }
         },
         setMode = MF.prototype.addMode = function(modeName, mode){
-            Modes = _.extend(Modes, {modeName: mode});
+            var _mode = {};
+            _mode[modeName] = mode;
+
+            Modes = _.extend(Modes, _mode);
         },
         loadMode = MF.prototype.mode = function( mode ){
             if( !mode || !Modes[mode]) return false;
@@ -406,8 +421,14 @@
         },
 
         _parseHtml: function () {
-            var self = this;
-            return $('.js-mf').each(function (i, $elem) {
+            var self = this,
+                selectors = '';
+
+            _.each(allowed_type, function(type){
+                selectors += '[data-'+type+'], ';
+            });
+
+            return $(selectors+' .js-mf').each(function (i, $elem) {
                 var opt = $($elem).data();
                 opt.el = $elem;
                 self._parse(opt);
