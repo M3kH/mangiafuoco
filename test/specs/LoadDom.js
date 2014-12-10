@@ -3,7 +3,7 @@ define(['app'], function(app){
     describe('MF should load from DOM', function() {
 
         beforeEach(function(done) {
-            setFixtures('<div id="main-view" data-view="view" class="js-mf"/>');
+            setFixtures('<div id="main-view" data-view="view"/>');
             app.init();
 
             // Apparently I've to delay the done of 50, todo: need investigation.
