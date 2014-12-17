@@ -154,7 +154,7 @@
         return this;
     };
 
-    MF.prototype.VERSION = '0.2.3';
+    MF.prototype.VERSION = '0.2.5';
     MF.prototype.adapters = {};
 
     MF.prototype.noConflict = function () {
@@ -478,10 +478,11 @@
             var instaces = this.instances,
                 instace = (this._isInstance(option.type, option.id)) ? instaces[option.type][option.id] : false;
 
+            if (instace) {
+                return instace.instance;
+            }
+
             if (req.type === 'get' && req.init) {
-                if (instace) {
-                    return instace.instance;
-                }
                 this.notify({
                     type: 'error',
                     msg: 'The ' + option.type + ' with id ' + option.id + ' instance doesn\'t exists.',
@@ -504,6 +505,7 @@
 
             // If is get-id, should just return the collection
             // If is get and init is false return the collection/model to be extended so basically works even for internally, similar to set-fetch or set-data; without init;
+            if(!opt.name) return false;
             this._loadFile(opt, _req, done);
 
         },
