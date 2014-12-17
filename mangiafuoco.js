@@ -308,7 +308,7 @@
                         }
 
                         instance = new obj({el: opt.el, data: opt.data});
-                        instance.render();
+                        if( _.isFunction(instance.render) ) instance.render();
                         return instance;
                     }
                 },
@@ -331,7 +331,7 @@
 
                     onReturnInstance: function (opt, obj, _req) {
                         var instance = new obj({el: opt.el, data: opt.data});
-                            instance.render();
+                        if( _.isFunction(instance.render) ) instance.render();
                         return instance;
                     }
                 }
