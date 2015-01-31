@@ -1,5 +1,6 @@
 MangiaFuoco
 ==========
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/M3kH/mangiafuoco?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 Is the fictional director and puppet master of the Great '[Marionette](http://www.marionettejs.com)' Theatre.
 Basically a App manager with a loader for: views, model and collection;
 
