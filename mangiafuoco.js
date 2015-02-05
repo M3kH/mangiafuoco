@@ -302,7 +302,6 @@
                         if(obj.then){
                             return obj.then(function(_obj){
                                 instance = new _obj({el: opt.el, data: opt.data});
-                                console.log(instance.template);
                                 if(instance.template) instance.render();
                                 return instance;
                             });
@@ -310,8 +309,7 @@
 
                         instance = new obj({el: opt.el, data: opt.data});
 
-                        if(instance.template) instance.render();
-                        if( _.isFunction(instance.render) && instance.template) instance.render();
+                        if( _.isFunction(instance.render) ) instance.render();
                         return instance;
                     }
                 },
