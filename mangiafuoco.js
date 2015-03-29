@@ -1,13 +1,13 @@
-//     MangiaFuoco.js 0.1.1a
+//     MangiaFire.js 0.1.1a
 
 //     (c) 2014-2015 Mauro Mandracchia, Full Stack Developer
-//     MangiaFuoco may be freely distributed under the MIT license.
+//     MangiaFire may be freely distributed under the MIT license.
 //     For all details and documentation:
 //     http://mangiafuocojs.org
 
 (function (root, factory) {
 
-    // Set up MangiaFuoco appropriately for the environment. Start with AMD.
+    // Set up MangiaFire appropriately for the environment. Start with AMD.
     if (typeof define === 'function' && define.amd) {
         define([
             'require', 'underscore', 'jquery', 'exports'
@@ -162,7 +162,7 @@
         return this;
     };
 
-    // Utilities for the MangiaFuoco Extensions, Globals and Adapters
+    // Utilities for the MangiaFire Extensions, Globals and Adapters
     var canHaveProperty = function( property, nested ){
             if(nested && MF.prototype[nested]) return !(_.has(property, MF.prototype[nested]));
             return !(_.has(property, MF.prototype));
@@ -548,7 +548,7 @@
             if (!loader) {
                 this.notify({
                     type: 'error',
-                    msg: 'Not loader defined for embed modules, Mangiafuoco needs RequireJS or CommonJS'
+                    msg: 'Not loader defined for embed modules, MangiaFire needs RequireJS or CommonJS'
                 });
                 return false;
             }
