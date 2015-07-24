@@ -432,7 +432,11 @@
             return $(selectors+' .js-mf').each(function (i, $elem) {
                 var opt = $($elem).data();
                 opt.el = $elem;
-                self._parse(opt);
+
+                if( !$($elem).data('mf-init') ){
+                    $($elem).data('mf-init', true);
+                    self._parse(opt);
+                }
             });
         },
 
