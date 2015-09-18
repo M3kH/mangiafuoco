@@ -297,17 +297,22 @@
                     },
 
                     onReturnInstance: function (opt, obj, _req) {
-                        var instance;
+                        var instance,
+                            data = opt.data ? opt.data : {};
+
+                        if(opt.el) data.el = opt.el;
 
                         if(obj.then){
                             return obj.then(function(_obj){
-                                instance = new _obj({el: opt.el, data: opt.data});
+
+                                instance = new _obj(data);
+
                                 if(instance.template) instance.render();
                                 return instance;
                             });
                         }
 
-                        instance = new obj({el: opt.el, data: opt.data});
+                        instance = new obj(data);
 
                         if( _.isFunction(instance.render) ) instance.render();
                         return instance;
@@ -331,7 +336,12 @@
                     },
 
                     onReturnInstance: function (opt, obj, _req) {
-                        var instance = new obj({el: opt.el, data: opt.data});
+                        var instance,
+                            data = opt.data ? opt.data : {};
+
+                        if(opt.el) data.el = opt.el;
+                        instance = new obj(data);
+
                         if( _.isFunction(instance.render) ) instance.render();
                         return instance;
                     }
